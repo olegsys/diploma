@@ -28,7 +28,9 @@ pipeline {
         stage("Deploy to aws"){
             steps {
                 withCredentials([aws(accessKeyVariable:'AWS_ACCESS_KEY_ID',credentialsId:'cloud_aws',secretKeyVariable:'AWS_SECRET_ACCESS_KEY')]){
-                    aws ec2 describe-instances
+                    sh '''
+                      aws ec2 describe-instances
+                    '''
                 }
             }
         }  
