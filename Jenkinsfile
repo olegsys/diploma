@@ -24,9 +24,7 @@ pipeline {
         stage("Docker build") {
             steps {
                 echo '========WE are building docker image ========='
-                dir ('docker/toolbox') {
-                    sh 'docker build -t olegsys/diploma:latest .'
-                }
+                sh 'docker build -t olegsys/diploma:latest .'                
             }
         }  
         stage("Docker push"){
