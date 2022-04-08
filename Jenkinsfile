@@ -12,7 +12,8 @@ pipeline {
         timestamps()
     }
 
-    stages {      
+    stages {
+  
         stage('Login to Dockerhub'){
             steps {
                 echo '========Login to docker hub========='
@@ -21,16 +22,17 @@ pipeline {
                 }
             }
         } 
-        stage("Docker build") {
+        stage("Docker build and push") {
             steps {
                 echo '========WE are building docker image ========='
-                sh 'docker build -t olegsys/diploma:latest .'                
+                sh 'docker build -t olegsys/diploma:latest .' 
+                echo "=========PUSH Image to Registry========"
+                sh 'docker push olegsys/diploma:${GIT_REVISION:0:7}'               
             }
         }  
-        stage("Docker push"){
+        stage("Test by SonarQube"){
             steps {
-                echo "=========PUSH Image to Registry========"
-                sh 'docker push olegsys/diploma:latest'
+                
             }
         }  
     }
