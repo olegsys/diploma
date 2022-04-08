@@ -18,16 +18,15 @@ pipeline {
     stages {  
         stage("Docker build and push") {
             steps {     
-                echo '========WE are building docker image ========='
-                sh '$BRANCH_NAME'
-                // sh 'docker build -t olegsys/diploma:$shortCommit -t olegsys/diploma:latest .'
-                // echo '========Login to docker hub========='
-                // withCredentials([usernamePassword(credentialsId: 'dockerhub_olegsys', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-                //     sh 'docker login -u $USERNAME -p $PASSWORD'
-                // } 
-                // echo "=========PUSH Image to Registry========"
-                // sh 'docker push olegsys/diploma:$shortCommit'
-                // sh 'docker push olegsys/diploma:latest'
+                echo '========Building docker image ========='                
+                sh 'docker build -t olegsys/diploma:$BRANCH_NAME-$shortCommit -t olegsys/diploma:latest .'
+                echo '========Login to docker hub========='
+                withCredentials([usernamePassword(credentialsId: 'dockerhub_olegsys', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
+                    sh 'docker login -u $USERNAME -p $PASSWORD'
+                } 
+                echo "=========PUSH Image to Registry========"
+                sh 'docker push olegsys/diploma:$BRANCH_NAME-$shortCommit'
+                sh 'docker push olegsys/diploma:latest'
             }
         }  
         // stage("Test by SonarQube"){
