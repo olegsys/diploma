@@ -15,18 +15,14 @@ pipeline {
         shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
     }
     stages {  
-        stage('Login to Dockerhub'){
-            steps {
-                echo '========Login to docker hub========='
-                withCredentials([usernamePassword(credentialsId: 'dockerhub_olegsys', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-                    sh 'docker login -u $USERNAME -p $PASSWORD'
-                }
-            }
-        } 
         stage("Docker build and push") {
             steps {                
                 echo '========WE are building docker image ========='
-                sh 'docker build -t olegsys/diploma:$shortCommit .' 
+                sh 'docker build -t olegsys/diploma:$shortCommit -t olegsys/diploma:latest .'
+                echo '========Login to docker hub========='
+                withCredentials([usernamePassword(credentialsId: 'dockerhub_olegsys', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
+                    sh 'docker login -u $USERNAME -p $PASSWORD'
+                } 
                 echo "=========PUSH Image to Registry========"
                 sh 'docker push olegsys/diploma:$shortCommit'               
             }
