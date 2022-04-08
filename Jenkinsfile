@@ -30,10 +30,10 @@ pipeline {
                 sh 'docker push olegsys/diploma:${GIT_REVISION:0:7}'               
             }
         }  
-        stage("Test by SonarQube"){
-            steps {
+        // stage("Test by SonarQube"){
+        //     steps {
                 
-            }
+        //     }
         }  
     }
 }
