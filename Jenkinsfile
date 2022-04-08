@@ -13,7 +13,7 @@ pipeline {
     }
     environment {
         shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
-        currentBrunch = sh(git branch --show-current)
+        currentBrunch = sh(returnStdout: true, script: "git branch --show-current")
     }
     stages {  
         stage("Docker build and push") {
