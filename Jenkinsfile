@@ -24,7 +24,7 @@ pipeline {
                     sh 'docker login -u $USERNAME -p $PASSWORD'
                 } 
                 echo "=========PUSH Image to Registry========"
-                sh 'docker push olegsys/diploma:$shortCommit'               
+                sh 'docker push olegsys/diploma --all-tags'               
             }
         }  
         // stage("Test by SonarQube"){
