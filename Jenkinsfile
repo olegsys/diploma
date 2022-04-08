@@ -11,6 +11,9 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
+    environment {
+        AWS_DEFAULT_REGION='us-east-1'
+    }
     stages {  
         // stage("Docker build and push") {
         //     steps {     
