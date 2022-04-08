@@ -20,15 +20,15 @@ pipeline {
             steps {     
                 echo '!!!!! $currentBrunch'           
                 echo '========WE are building docker image ========='
-                echo 'git branch --show-current'
-                sh 'docker build -t olegsys/diploma:$shortCommit -t olegsys/diploma:latest .'
-                echo '========Login to docker hub========='
-                withCredentials([usernamePassword(credentialsId: 'dockerhub_olegsys', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-                    sh 'docker login -u $USERNAME -p $PASSWORD'
-                } 
-                echo "=========PUSH Image to Registry========"
-                sh 'docker push olegsys/diploma:$shortCommit'
-                sh 'docker push olegsys/diploma:latest'
+                sh 'git branch --show-current'
+                // sh 'docker build -t olegsys/diploma:$shortCommit -t olegsys/diploma:latest .'
+                // echo '========Login to docker hub========='
+                // withCredentials([usernamePassword(credentialsId: 'dockerhub_olegsys', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
+                //     sh 'docker login -u $USERNAME -p $PASSWORD'
+                // } 
+                // echo "=========PUSH Image to Registry========"
+                // sh 'docker push olegsys/diploma:$shortCommit'
+                // sh 'docker push olegsys/diploma:latest'
             }
         }  
         // stage("Test by SonarQube"){
