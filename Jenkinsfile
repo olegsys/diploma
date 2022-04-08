@@ -23,8 +23,9 @@ pipeline {
             }
         } 
         stage("Docker build and push") {
+            scmInfo = checkout scm
             steps {
-                scmInfo = checkout scm
+                
                 echo "${scmInfo.GIT_COMMIT}"
                 echo '========WE are building docker image ========='
                 sh 'docker build -t olegsys/diploma:${GIT_REVISION:0:7} .' 
