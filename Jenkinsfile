@@ -24,6 +24,7 @@ pipeline {
         } 
         stage("Docker build and push") {
             steps {
+                echo "scmVars.GIT_COMMIT"
                 echo '========WE are building docker image ========='
                 sh 'docker build -t olegsys/diploma:${GIT_REVISION:0:7} .' 
                 echo "=========PUSH Image to Registry========"
