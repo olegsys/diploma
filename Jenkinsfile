@@ -13,10 +13,12 @@ pipeline {
     }
     environment {
         shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+        currentBrunch = sh(git branch --show-current)
     }
     stages {  
         stage("Docker build and push") {
-            steps {                
+            steps {     
+                echo '!!!!! $currentBrunch'           
                 echo '========WE are building docker image ========='
                 sh 'docker build -t olegsys/diploma:$shortCommit -t olegsys/diploma:latest .'
                 echo '========Login to docker hub========='
