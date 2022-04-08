@@ -20,7 +20,7 @@ pipeline {
             steps {     
                 echo '!!!!! $currentBrunch'           
                 echo '========WE are building docker image ========='
-                sh 'git branch --show-current'
+                sh 'env.BRANCH_NAME'
                 // sh 'docker build -t olegsys/diploma:$shortCommit -t olegsys/diploma:latest .'
                 // echo '========Login to docker hub========='
                 // withCredentials([usernamePassword(credentialsId: 'dockerhub_olegsys', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
