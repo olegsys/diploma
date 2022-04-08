@@ -25,11 +25,10 @@ pipeline {
         } 
         stage("Docker build and push") {
             steps {                
-                echo "$shortCommit"
                 echo '========WE are building docker image ========='
-                sh 'docker build -t olegsys/diploma:${GIT_REVISION:0:7} .' 
+                sh 'docker build -t olegsys/diploma:$shortCommit .' 
                 echo "=========PUSH Image to Registry========"
-                sh 'docker push olegsys/diploma:${GIT_REVISION:0:7}'               
+                sh 'docker push olegsys/diploma:$shortCommit'               
             }
         }  
         // stage("Test by SonarQube"){
