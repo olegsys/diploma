@@ -1,0 +1,66 @@
+stages:
+  - build
+  - test
+  - stage
+  - deploy
+
+variables:    
+    IMAGE_NAME: ${CI_REGISTRY_IMAGE}/app
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+
+.before_script_template:
+  before_script:
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+   
+build:
+  extends: .before_script_template
+  stage: build
+  image: docker:latest
+  services:
+    - docker:19.03.12-dind  
+  script:    
+    - docker build -t ${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA} -t  ${IMAGE_NAME}:latest ./
+    - docker push ${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}
+    - docker push ${IMAGE_NAME}:latest
+
+test:
+  stage: test
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner -Dsonar.qualitygate.wait=true
+  only:
+    - merge_requests
+    - master
+    - develop
+
+deploy_to_stage:
+  stage: stage
+  image: alpine/k8s:1.20.7
+  only:
+    - develop
+  script:
+    - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+    - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    - export EKS_CLUSTER_NAME=${EKS_CLUSTER_NAME}
+    - aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}
+    - helm upgrade -n stage -i "app-stage" ./.infra/helm/app/ -f ./.infra/helm/app/values.stage.yaml --set image.tag=${CI_COMMIT_SHORT_SHA},env.MYSQL_HOSTNAME=${AWS_RDS_HOSTNAME_PROD},env.MYSQL_USERNAME=${AWS_RDS_USERNAME},env.MYSQL_PASSWORD=${AWS_RDS_PASSWORD},env.MYSQL_DATABASE=${AWS_RDS_DATABASE}
+
+
+deploy_to_prod:
+  stage: deploy
+  image: alpine/k8s:1.20.7
+  only:
+    - master
+  script:
+    - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+    - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    - export EKS_CLUSTER_NAME=${EKS_CLUSTER_NAME}    
+    - aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}
+    - helm upgrade -i "app" ./.infra/helm/app/ -f ./.infra/helm/app/values.prod.yaml --set image.tag=${CI_COMMIT_SHORT_SHA},env.MYSQL_HOSTNAME=${AWS_RDS_HOSTNAME_STAGE},env.MYSQL_USERNAME=${AWS_RDS_USERNAME},env.MYSQL_PASSWORD=${AWS_RDS_PASSWORD},env.MYSQL_DATABASE=${AWS_RDS_DATABASE}

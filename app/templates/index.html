@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Super Diploma Page</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <h1>Records</h1>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a href="/import" class="btn">Import</a>
+    </nav>
+    <table id="records" class="row-border" style="width:100%">
+        <caption>Pink Floyd songs</caption>
+        <thead>
+        <tr>
+            <th scope="col">Kind</th>
+            <th scope="col">CollectionName</th>
+            <th scope="col">TrackName</th>
+            <th scope="col">CollectionPrice</th>
+            <th scope="col">TrackPrice</th>
+            <th scope="col">PrimaryGenreName</th>
+            <th scope="col">TrackCount</th>
+            <th scope="col">TrackNumber</th>
+            <th scope="col">ReleaseDate</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Items}}
+        <tr>
+            <td>{{.Kind}}</td>
+            <td>{{.CollectionName}}</td>
+            <td>{{.TrackName}}</td>
+            <td>{{.CollectionPrice}}</td>
+            <td>{{.TrackPrice}}</td>
+            <td>{{.PrimaryGenreName}}</td>
+            <td>{{.TrackCount}}</td>
+            <td>{{.TrackNumber}}</td>
+            <td>{{.ReleaseDate.Format "02 January 2006"}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#records').DataTable();
+    } );
+</script>
+
+</body>
+</html>
