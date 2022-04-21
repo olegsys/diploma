@@ -54,3 +54,4 @@ terraform.rc
 *.pem
 TEMP/
 .infra/terraform/kubeconfig_diploma-eks
+.DS_Store
