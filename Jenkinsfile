@@ -34,7 +34,7 @@ pipeline {
                 branch 'develop'
             }
             steps {
-                withCredentials([file(credentialsId: 'jenkins-token', variable: 'jenkins-token')]){
+                withCredentials([string(credentialsId: 'jenkins-token', variable: 'jenkins-token')]){
                     sh 'kubectl config set-credentials jenkins --token=$jenkins-token'
 
                 }
