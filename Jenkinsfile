@@ -28,14 +28,15 @@ pipeline {
         //         sh 'docker push olegsys/diploma:latest'
         //     }
         // }  
-        stage("Deploy to aws"){
+        stage("Deploy dev to k8s"){
+            agent {
+                docker { image 'alpine/k8s:1.20.7' }
+            }
+            when {
+                branch 'develop'
+            }
             steps {
-                withCredentials([aws(accessKeyVariable:'AWS_ACCESS_KEY_ID',credentialsId:'cloud_aws',secretKeyVariable:'AWS_SECRET_ACCESS_KEY')]){
-                    sh '''
-                      echo $AWS_DEFAULT_REGION
-                      aws ec2 describe-instances
-                    '''
-                }
+                sh 'echo $AWS_DEFAULT_REGION'
             }
         }  
     }
