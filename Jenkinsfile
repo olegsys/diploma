@@ -34,7 +34,10 @@ pipeline {
                 branch 'develop'
             }
             steps {
-                sh 'echo $AWS_DEFAULT_REGION'
+                withCredentials(file(credentialsId: 'jenkins-token', variable: 'jenkins-token')]){
+                    sh 'kubectl config set-credentials jenkins --token=$jenkins-token'
+                    
+                }
             }
         }  
     }
