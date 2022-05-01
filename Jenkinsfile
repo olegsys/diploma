@@ -34,7 +34,7 @@ pipeline {
                 branch 'develop'
             }
             steps {
-                withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG')]){
+                withCredentials([file(credentialsId: 'KUBECONFIG', variable: 'KUBECONFIG')]){
                     sh 'kubectl get po'
 
                 }
